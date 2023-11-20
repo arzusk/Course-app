@@ -11,11 +11,8 @@ namespace Repository.Repositories.Interfaces
     {
         void Create (T entity);
         void Delete (T entity);
-        void Edit(T entity);
         T GetById (int id); 
         List<T> GetAll();
-        List<T> Search(string str);
-        List<T> Sorting(int entity);
-
+  
     }
 }

@@ -1,4 +1,5 @@
 ﻿using Domain.Common;
+using Repository.Data;
 using Repository.Repositories.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -12,37 +13,24 @@ namespace Repository.Repositories
     {
         public void Create(T entity)
         {
-            throw new NotImplementedException();
+            AppDbContext<T>.Datas.Add(entity);
         }
 
         public void Delete(T entity)
         {
-            throw new NotImplementedException();
-        }
-
-        public void Edit(T entity)
-        {
-            throw new NotImplementedException();
+            AppDbContext<T>.Datas.Remove(entity);
         }
 
         public List<T> GetAll()
         {
-            throw new NotImplementedException();
+           return AppDbContext<T>.Datas.ToList();
         }
 
         public T GetById(int id)
         {
-            throw new NotImplementedException();
+            return AppDbContext<T>.Datas.FirstOrDefault(m => m.Id == id);
         }
 
-        public List<T> Search(string str)
-        {
-            throw new NotImplementedException();
-        }
-
-        public List<T> Sorting(int entity)
-        {
-            throw new NotImplementedException();
-        }
+       
     }
 }
