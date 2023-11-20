@@ -1,5 +1,6 @@
 ﻿using Domain.Models;
 using Repository.Data;
+using Repository.Enums;
 using Repository.Repositories.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -29,7 +30,6 @@ namespace Repository.Repositories
             if (student.Group.Name is not null)
                 existStudent.Group.Name = student.Group.Name;
 
-
         }
 
         public List<Student> Search(string fullname)
@@ -37,9 +37,16 @@ namespace Repository.Repositories
            return AppDbContext<Student>.Datas.Where(m=>m.FullName == fullname).ToList();
         }
 
-        public List<Student> Sorting()
+        public List<Student> Sorting(SortType sort)
         {
-           return AppDbContext<Student>.Datas.OrderBy(m=>m.Age).ToList();
+            switch (sort)
+            {
+                case SortType.Asc:
+                    AppDbContext<Student>.Datas.OrderBy(m=>m.Age).ToList(); break;
+                 case SortType.Desc:
+                    AppDbContext<Student>.Datas.OrderByDescending(m=>m.Age).ToList();break;
+            }
+            return null;
         }
     }
 }

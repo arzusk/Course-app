@@ -1,5 +1,6 @@
 ﻿using Domain.Models;
 using Repository.Data;
+using Repository.Enums;
 using Repository.Repositories.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -25,9 +26,17 @@ namespace Repository.Repositories
            return AppDbContext<Group>.Datas.Where(m=>m.Name == name).ToList();
         }
 
-        public List<Group> Sorting()
+        public List<Group> Sorting(SortType sort)
         {
-            return AppDbContext<Group>.Datas.OrderBy(m=>m.Capacity).ToList();
+            switch (sort)
+            {
+                case SortType.Asc:
+                    AppDbContext<Group>.Datas.OrderBy(m => m.Capacity).ToList(); break;
+                case SortType.Desc:
+                    AppDbContext<Group>.Datas.OrderByDescending(m => m.Capacity).ToList(); break;
+            }
+            return null;
         }
+
     }
 }
