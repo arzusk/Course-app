@@ -40,5 +40,5 @@ static void GetMenues()
 static void GroupAndStudentsMenues()
 {
     ConsoleColor.Cyan.WriteConsole("Please select one option: Group operations: 1-Create, 2-Delete, 3-Edit, 4- GetById, 5-GetAll, 6-Search, 7-Sorting ");
-    ConsoleColor.Cyan.WriteConsole("Student operations : 8-Create, 9-Delete,10-Edit, 11-GetById, 12-GetAll, 13-Filter, 14-Search");
+    ConsoleColor.Cyan.WriteConsole("Student operations : 8-Create, 9-Delete,10-Edit, 11-GetById, 12-GetAll, 13-Filter,14-Search");
 }
