@@ -10,6 +10,7 @@ namespace Repository.Repositories.Interfaces
 {
     public interface IStudentRepository: IBaseRepository<Student>
     {
+        void Create(Student entity);
         List<Student> Search(string fullname);
         List<Student> Sorting(SortType sort );
         void Edit(int id,Student student);

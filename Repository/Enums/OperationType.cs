@@ -8,8 +8,13 @@ namespace Repository.Enums
 {
     public enum OperationType
     {
-        AccountRegister=1,
-        AccountLogin,
+        GroupCreate=1,
+        GroupEdit,
+        GroupDelete,
+        GroupGetById,
+        GroupGetAll,
+        GroupSearch,
+        GroupSorting,
         StudentCreate,
         StudentEdit,
         StudentDelete,
@@ -17,12 +22,7 @@ namespace Repository.Enums
         StudentGetAll,
         StudentSearch,
         StudentSorting,
-        GroupCreate,
-        GroupEdit,
-        GroupDelete,
-        GroupGetById,
-        GroupGetAll,
-        GroupSearch,
-        GroupSorting,
+   
+   
     }
 }

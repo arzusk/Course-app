@@ -54,5 +54,9 @@ namespace Service.Services
         {
           return _repository.Sorting(sort);
         }
+        public bool IsGroupNameUnique(string groupName)
+        {
+            return _repository.IsGroupNameUnique(groupName);
+        }
     }
 }

@@ -28,14 +28,14 @@ namespace Course_app.Controllers
             string name=Console.ReadLine();
             Console.WriteLine("Add your Surname :");
             string surname=Console.ReadLine();
-            Console.WriteLine("Add your age:");
+            Age: Console.WriteLine("Add your age:");
             string ageStr = Console.ReadLine();
             int age;
             bool isCorrectAge = int.TryParse(ageStr, out age);
             if (!isCorrectAge)
             {
                 ConsoleColor.Red.WriteConsole("Age Format incorrect,please write correct age");
-                goto Name;
+                goto Age;
             }
             Console.WriteLine("Add your Email:");
             string email = Console.ReadLine();
@@ -81,6 +81,12 @@ namespace Course_app.Controllers
             else
             {
                 ConsoleColor.Red.WriteConsole("Email or password incorrect,please try again");
+                goto Email;
+            }
+
+            if (!email.Contains("@"))
+            {
+                ConsoleColor.Red.WriteConsole("Email incorrect,please write correct email");
                 goto Email;
             }
         }

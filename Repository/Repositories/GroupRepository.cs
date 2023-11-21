@@ -14,16 +14,16 @@ namespace Repository.Repositories
     {
         public void Edit(int groupId, Group group)
         {
-           Group exist=AppDbContext<Group>.Datas.FirstOrDefault(m=>m.Id==groupId);
-            if (exist.Name!=null)
+            Group exist = AppDbContext<Group>.Datas.FirstOrDefault(m => m.Id == groupId);
+            if (exist.Name != null)
                 exist.Name = group.Name;
-            if (exist!=null)
-                exist.Capacity = group.Capacity;      
+            if (exist != null)
+                exist.Capacity = group.Capacity;
         }
 
         public List<Group> Search(string name)
         {
-           return AppDbContext<Group>.Datas.Where(m=>m.Name == name).ToList();
+            return AppDbContext<Group>.Datas.Where(m => m.Name == name).ToList();
         }
 
         public List<Group> Sorting(SortType sort)
@@ -38,5 +38,10 @@ namespace Repository.Repositories
             return null;
         }
 
+
+        public bool IsGroupNameUnique(string groupName)
+        {
+            return AppDbContext<Group>.Datas.All(m => m.Name != groupName);
+        }
     }
 }
