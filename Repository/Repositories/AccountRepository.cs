@@ -19,7 +19,7 @@ namespace Repository.Repositories
 
         public bool Register(User user, string confirmPassword)
         {
-            if (user.Email != confirmPassword)
+            if (user.Password != confirmPassword)
             {
                 return false;
             }
