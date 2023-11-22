@@ -15,7 +15,8 @@ namespace Repository.Repositories
         public void Edit(int id, Student student)
         {
            Student existStudent=AppDbContext<Student>.Datas.FirstOrDefault(x => x.Id == id);
-            if(student.FullName is not null)
+     
+            if (student.FullName is not null)
             existStudent.FullName= student.FullName;
 
             if (student.Age is not null)
@@ -27,8 +28,18 @@ namespace Repository.Repositories
             if (student.Address is not null)
                 existStudent.Address = student.Address;
 
-            if (student.Group.Name is not null)
-                existStudent.Group.Name = student.Group.Name;
+            if (student.Group != null)
+            {
+                if (existStudent.Group == null)
+                {
+                    existStudent.Group = new Group();
+                }
+
+                if (student.Group.Name != null)
+                {
+                    existStudent.Group.Name = student.Group.Name;
+                }
+            }
 
         }
 

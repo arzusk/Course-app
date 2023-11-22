@@ -14,11 +14,12 @@ namespace Repository.Repositories
     {
         public void Edit(int groupId, Group group)
         {
-            Group exist = AppDbContext<Group>.Datas.FirstOrDefault(m => m.Id == groupId);
-            if (exist.Name != null)
-                exist.Name = group.Name;
-            if (exist != null)
-                exist.Capacity = group.Capacity;
+            
+            Group existGroup = AppDbContext<Group>.Datas.FirstOrDefault(m => m.Id == groupId);
+            if (existGroup.Name != null)
+                existGroup.Name = group.Name;
+            if (existGroup != null)
+                existGroup.Capacity = group.Capacity;
         }
 
         public List<Group> Search(string name)

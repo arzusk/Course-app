@@ -1,5 +1,6 @@
 ﻿
 using Course_app.Controllers;
+using Domain.Models;
 using Repository.Enums;
 using Service.Helpers.Extensions;
 
@@ -20,7 +21,6 @@ Operation: string opearionStr = Console.ReadLine();
                 break;
             case 2:
                 accountController.Login();
-                GroupAndStudentsMenues();
                GetStudentAndGroup(); 
                 break;
             default:
@@ -53,22 +53,35 @@ static void GetStudentAndGroup()
                 case (int)OperationType.GroupCreate:
                     groupController.CreateGroup();
                     break;
-                case (int)OperationType.GroupGetAll:
-                    groupController.GetAll();
+                case (int)OperationType.GroupEdit:
+                    groupController.EditGroup();
+                    break;
+                case (int)OperationType.GroupSorting:
+                    studentController.Filter();
                     break;
                 case (int)OperationType.StudentCreate:
-                    studentController.Create();
+                    studentController.StudentCreate();
                     goto Operation;
                 case (int)OperationType.StudentGetAll:
                     studentController.GetAll();
                     break;
+                case (int)OperationType.GroupGetAll:
+                    groupController.GetAll();
+                    break;
+                case (int)OperationType.StudentEdit:
+                    studentController.EditStudent();
+                    break;
+                case (int)OperationType.StudentGetById:
+                    studentController.GetById();
+                    break;
+                case (int)OperationType.StudentSearch:
+                    studentController.Search();
+                    break;
+
             }
         }
     }
 }
-
-
-
 
 
 static void GetMenues()
@@ -80,4 +93,5 @@ static void GroupAndStudentsMenues()
     ConsoleColor.Cyan.WriteConsole("Please select one option: Group operations: 1-Create, 2-Delete, 3-Edit, 4- GetById, 5-GetAll, 6-Search, 7-Sorting ");
     ConsoleColor.Cyan.WriteConsole("Student operations : 8-Create, 9-Delete,10-Edit, 11-GetById, 12-GetAll, 13-Filter,14-Search");
 }
+
 
