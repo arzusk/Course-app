@@ -112,7 +112,26 @@ namespace Course_app.Controllers
 
         }
 
-        public void Delete() { }
+        public void Delete()
+        {
+            {
+                Console.WriteLine("Add Group id :");
+            Id: string idStr = Console.ReadLine();
+                int id;
+                bool IsCorrectId = int.TryParse(idStr, out id);
+                if (IsCorrectId)
+                {
+                    var student = _groupService.GetById(id);
+                    _groupService.Delete(student);
+                    Console.WriteLine("Group has been deleted");
+                }
+                else
+                {
+                    ConsoleColor.Red.WriteConsole("ID Format is wrong,please select again:");
+                }
+
+            }
+        }
         public void Search() 
         {
             Console.WriteLine("Search Group:");
@@ -126,7 +145,7 @@ namespace Course_app.Controllers
         }
         public void Filter() 
         {
-            Console.WriteLine("Select Sort Type: Ascending-(1), Descending-(2)");
+            Console.WriteLine("Select Group Sort Type: Ascending-(1), Descending-(2)");
             SortType: string sortStr=Console.ReadLine();
             int sortType;
             bool isCorrectSortType=int.TryParse(sortStr, out sortType);

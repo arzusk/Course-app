@@ -27,7 +27,7 @@ namespace Service.Services
 
         public void Delete(Group group)
         {
-           _repository?.Delete(group);
+           _repository.Delete(group);
         }
 
         public void Edit(int groupId, Group group)

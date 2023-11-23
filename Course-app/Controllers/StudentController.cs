@@ -1,4 +1,5 @@
 ﻿using Domain.Models;
+using Repository.Enums;
 using Service.Helpers.Extensions;
 using Service.Services;
 using Service.Services.Interfaces;
@@ -99,14 +100,20 @@ namespace Course_app.Controllers
 
         public void Delete()
         {
-            Console.WriteLine("Please enter the surname and name of student you want to delete:");
-            string fullname= Console.ReadLine();
-            Student student = new()
+            Console.WriteLine("Add Student id :");
+        Id: string idStr = Console.ReadLine();
+            int id;
+            bool IsCorrectId = int.TryParse(idStr, out id);
+            if (IsCorrectId)
             {
-                 FullName=fullname
-            };
-            _studentService.Delete(student);
-            Console.WriteLine("Student has been deleted");
+                var student = _studentService.GetById(id);
+                _studentService.Delete(student);
+                Console.WriteLine("Student has been deleted");
+            }
+            else
+            {
+                ConsoleColor.Red.WriteConsole("ID Format is wrong,please select again:");
+            }
 
         }
         public void EditStudent()
@@ -177,7 +184,44 @@ namespace Course_app.Controllers
                 Console.WriteLine($"Fullname: {data.FullName} Age {data.Age} Phone {data.Phone} Address: {data.Address} Group Name:{data.Group.Name}");
             }
         }
-        public void Filter() { }
+        public void Filter()
+        {
+            Console.WriteLine("Select Student Sort Type: Ascending-(1), Descending-(2)");
+        SortType: string sortStr = Console.ReadLine();
+            int sortType;
+            bool isCorrectSortType = int.TryParse(sortStr, out sortType);
+            if (isCorrectSortType)
+            {
+                if (sortType == (int)SortType.Asc || sortType == (int)SortType.Desc)
+                {
+                    List<Student> students = new();
+                    if (sortType == (int)SortType.Asc)
+                    {
+                        students = _studentService.Sorting(SortType.Asc);
+
+                    }
+                    else
+                    {
+                        students = _studentService.Sorting(SortType.Desc);
+                    }
+
+                    foreach (var student in students)
+                    {
+                        var res = $"Fullname: {student.FullName} Age {student.Age} Phone {student.Phone} Address: {student.Address} Group Name:{student.Group.Name}";
+                    }
+                }
+                else
+                {
+                    ConsoleColor.Red.WriteConsole("Sort Type is wrong,please select again:");
+                    goto SortType;
+                }
+            }
+            else
+            {
+                ConsoleColor.Red.WriteConsole("Sort Type Format is wrong,please select again:");
+                goto SortType;
+            }
+        }
 
     }
 
