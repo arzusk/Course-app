@@ -21,7 +21,6 @@ namespace Repository.Repositories
             if (existGroup != null)
                 existGroup.Capacity = group.Capacity;
         }
-
         public List<Group> Search(string name)
         {
             return AppDbContext<Group>.Datas.Where(m => m.Name == name).ToList();
@@ -32,15 +31,14 @@ namespace Repository.Repositories
             switch (sort)
             {
                 case SortType.Asc:
-                    AppDbContext<Group>.Datas.OrderBy(m => m.Capacity).ToList(); break;
+                    return AppDbContext<Group>.Datas.OrderBy(m => m.Capacity).ToList(); break;
                 case SortType.Desc:
-                    AppDbContext<Group>.Datas.OrderByDescending(m => m.Capacity).ToList(); break;
+                   return  AppDbContext<Group>.Datas.OrderByDescending(m => m.Capacity).ToList(); break;
             }
             return null;
         }
 
-
-        public bool IsGroupNameUnique(string groupName)
+        public bool IsGroupName(string groupName)
         {
             return AppDbContext<Group>.Datas.All(m => m.Name != groupName);
         }

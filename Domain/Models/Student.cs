@@ -14,5 +14,16 @@ namespace Domain.Models
         public int? Age { get; set; }
         public string Phone { get; set; }
         public Group Group { get; set; }
+        public Student(int id,string fullname,string address,int? age,string phone,string name)
+        {
+            Id = id;
+            FullName = fullname;
+            Address = address;
+            Age = age;
+            Phone = phone;
+            Group = new Group();
+            Group.Name = name;
+        }
+
     }
 }

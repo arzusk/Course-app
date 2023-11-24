@@ -53,26 +53,42 @@ static void GetStudentAndGroup()
                 case (int)OperationType.GroupCreate:
                     groupController.CreateGroup();
                     break;
+                case (int)OperationType.GroupDelete:
+                    groupController.Delete();
+                    break;
                 case (int)OperationType.GroupEdit:
                     groupController.EditGroup();
                     break;
-                case (int)OperationType.GroupSorting:
-                    studentController.Filter();
-                    break;
-                case (int)OperationType.StudentCreate:
-                    studentController.StudentCreate();
-                    goto Operation;
-                case (int)OperationType.StudentGetAll:
-                    studentController.GetAll();
+                case (int)OperationType.GroupGetById:
+                    groupController.GetById();
                     break;
                 case (int)OperationType.GroupGetAll:
                     groupController.GetAll();
                     break;
+                case (int)OperationType.GroupSearch:
+                    groupController.Search();
+                    break;
+                case (int)OperationType.GroupSorting:
+                    groupController.Filter();
+                    break;
+                case (int)OperationType.StudentCreate:
+                    studentController.StudentCreate();
+                    goto Operation;
+                case (int)OperationType.StudentDelete:
+                    studentController.Delete();
+                    goto Operation;
+
                 case (int)OperationType.StudentEdit:
                     studentController.EditStudent();
                     break;
                 case (int)OperationType.StudentGetById:
                     studentController.GetById();
+                    break;
+                case (int)OperationType.StudentGetAll:
+                    studentController.GetAll();
+                    break;
+                case (int)OperationType.StudentSorting:
+                    studentController.Filter();
                     break;
                 case (int)OperationType.StudentSearch:
                     studentController.Search();
@@ -82,7 +98,6 @@ static void GetStudentAndGroup()
         }
     }
 }
-
 static void GetMenues()
 {
     ConsoleColor.Cyan.WriteConsole("(1) - Register, (2) - Login");

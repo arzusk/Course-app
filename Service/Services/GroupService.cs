@@ -14,12 +14,12 @@ namespace Service.Services
     public class GroupService : IGroupService
     {
         private readonly IGroupRepository _repository;
+       
         public GroupService()
         {
             _repository = new GroupRepository();
                 
         }
-
         public void Create(Group group)
         {
            _repository.Create(group);
@@ -54,9 +54,10 @@ namespace Service.Services
         {
           return _repository.Sorting(sort);
         }
-        public bool IsGroupNameUnique(string groupName)
+        public bool IsGroupName(string groupName)
         {
-            return _repository.IsGroupNameUnique(groupName);
+            return _repository.IsGroupName(groupName);
         }
+      
     }
 }

@@ -6,7 +6,9 @@ using Service.Services.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Net.Http.Headers;
+using System.Numerics;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -41,42 +43,51 @@ namespace Course_app.Controllers
             ConsoleColor.White.WriteConsole("Add Phone:");
             string phone = Console.ReadLine();
             ConsoleColor.White.WriteConsole("Group Id:");
+            string id = Console.ReadLine();
             int groupId;
-            bool isValidGroupId = int.TryParse(Console.ReadLine(), out groupId);
+            bool isValidGroupId = int.TryParse(id, out groupId);
 
             if (!isValidGroupId)
             {
                 ConsoleColor.Red.WriteConsole("Invalid Group Id. Please enter a valid number.");
                 return;
             }
-            Student student = new()
-            {
-                FullName = fullname,
-                Age = age,
-                Phone = phone,
-                Address = address,
-            };
-            Group group = new()
-            {
-                Id = groupId,
-            };
-
             GroupService groupService = new GroupService();
-            if (groupService.GetById(groupId) == null)
+            Group group = groupService.GetById(groupId);
+            if (group == null)
             {
                 ConsoleColor.Red.WriteConsole($"Group with Id not found. Please enter a valid Group Id.");
                 return;
             }
-            _studentService.Create(student);
-            Console.WriteLine($"Fullname: {student.FullName} Age {student.Age} Phone {student.Phone} Address: {student.Address} ");
+            Student student = new Student(groupId, fullname, address, age, phone, group.Name);
+
+            if (_studentService == null)
+            {
+                Console.WriteLine(" Please initialize it before using.");
+                return;
+            }
+
+            if (_studentService.AddStudentToGroup(student, group))
+            {
+                _studentService.Create(student);
+                Console.WriteLine($"Fullname: {student.FullName} Age {student.Age} Phone {student.Phone} Address: {student.Address} Group Name: {group.Name}");
+            }
+            else
+            {
+                ConsoleColor.Red.WriteConsole($"Group {group.Id} is at full capacity.");
+            }
+
         }
 
         public void GetAll()
         {
-            var result=_studentService.GetAll();
+            var result = _studentService.GetAll();
             foreach (var student in result)
             {
-                Console.WriteLine($"Fullname: {student.FullName} Age {student.Age} Phone {student.Phone} Address: {student.Address} Group Name:{student.Group.Name}");
+                string groupname = student.Group.Name ?? "Group Name Not Found";
+                string res = $"Fullname: {student.FullName} Age {student.Age} Phone {student.Phone} Address: {student.Address} Group Name:{student.Group.Name} ";
+                Console.WriteLine(res);
+
             }
         }
         public void GetById()
@@ -85,15 +96,23 @@ namespace Course_app.Controllers
         Id: Console.WriteLine("Add id :");
             string idStr = Console.ReadLine();
             int id;
-            bool IsCorrectId= int.TryParse(idStr, out id);
-           if (IsCorrectId)
+            bool IsCorrectId = int.TryParse(idStr, out id);
+            if (IsCorrectId)
             {
                 Student student = _studentService.GetById(id);
-                Console.WriteLine($"Fullname: {student.FullName} Age {student.Age} Phone {student.Phone} Address: {student.Address}");
+
+                if (student != null)
+                {
+                    Console.WriteLine($"Student Name: {student.FullName} Student Age :{student.Age} Student Address:{student.Address} Student Phone :{student.Phone}");
+                }
+                else
+                {
+                    ConsoleColor.Red.WriteConsole("Student not found with the given Id.");
+                }
             }
             else
             {
-                ConsoleColor.Red.WriteConsole("Invalid Group Id. Please enter a valid number.");
+                ConsoleColor.Red.WriteConsole("Invalid Student Id. Please enter a valid number.");
                 goto Id;
             }
         }
@@ -149,20 +168,11 @@ namespace Course_app.Controllers
                     ConsoleColor.White.WriteConsole("If you want to change your group, enter the group name you want to change:");
                     string groupName = Console.ReadLine();
 
-                    Student student1 = new Student
-                    {
-                        Id = id,
-                        FullName = fullname,
-                        Age = age,
-                        Phone = phone,
-                        Address = address,
-                        Group = new Group { Name = groupName }
-                    };
-
+                    Student student1 = new(id, fullname, address, age, phone, groupName);
                     _studentService.Edit(id, student1);
                     ConsoleColor.Green.WriteConsole("Edit successful");
                 }
-     
+
             }
             else
             {
@@ -170,15 +180,13 @@ namespace Course_app.Controllers
                 goto Id;
             }
 
-       
-
         }
 
         public void Search()
         {
             Console.WriteLine("Search student:");
-            string studentName= Console.ReadLine();
-            var datas=_studentService.Search(studentName);
+            string studentName = Console.ReadLine();
+            var datas = _studentService.Search(studentName);
             foreach (var data in datas)
             {
                 Console.WriteLine($"Fullname: {data.FullName} Age {data.Age} Phone {data.Phone} Address: {data.Address} Group Name:{data.Group.Name}");
@@ -208,6 +216,7 @@ namespace Course_app.Controllers
                     foreach (var student in students)
                     {
                         var res = $"Fullname: {student.FullName} Age {student.Age} Phone {student.Phone} Address: {student.Address} Group Name:{student.Group.Name}";
+                        Console.WriteLine(res);
                     }
                 }
                 else

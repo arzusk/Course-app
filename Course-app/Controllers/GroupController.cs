@@ -36,7 +36,7 @@ namespace Course_app.Controllers
 
             if (isCorrectCapacity)
             {
-                if (_groupService.IsGroupNameUnique(group.Name))
+                if (_groupService.IsGroupName(group.Name))
                 {
                     _groupService.Create(group);
                     Console.WriteLine($"Group-{group.Name}-{group.Capacity} created with ID:-{group.Id}");
@@ -49,7 +49,7 @@ namespace Course_app.Controllers
             }
             else
             {
-                ConsoleColor.Red.WriteConsole("Group format is wrong,please select again:");
+                ConsoleColor.Red.WriteConsole("Capacity format is wrong,please select again:");
                 goto Capacity;
             }
           
@@ -76,13 +76,22 @@ namespace Course_app.Controllers
             if (IsCorrectId)
             {
                 Group group = _groupService.GetById(id);
-                Console.WriteLine($"Group Name: {group.Name} Group Capacity: {group.Capacity}");
+
+                if (group != null)
+                {
+                    Console.WriteLine($"Group Name: {group.Name} Group Capacity: {group.Capacity}");
+                }
+                else
+                {
+                    ConsoleColor.Red.WriteConsole("Group not found with the given Id.");
+                }
             }
             else
             {
-                ConsoleColor.Red.WriteConsole("Invalid Group Id. Please enter a valid number.");
+                ConsoleColor.Red.WriteConsole("Id format is wrong,please select again:");
                 goto Id;
             }
+
         }
 
         public void EditGroup()
@@ -100,8 +109,21 @@ namespace Course_app.Controllers
                 }
                 Console.WriteLine("Enter Group Name :");
                 string name = Console.ReadLine();
-                _groupService.Edit(id, new Group { Name = name});
-                ConsoleColor.Green.WriteConsole("Successful edit");
+            Capacity: ConsoleColor.White.WriteConsole("Edit group capacity:");
+                string groupCapacity = Console.ReadLine();
+                int capacity;
+                bool isCorrectCapacity = int.TryParse(groupCapacity, out capacity);
+                if (isCorrectCapacity)
+                {
+                    _groupService.Edit(id, new Group { Name = name,Capacity=capacity });
+                    ConsoleColor.Green.WriteConsole("Successful edit");
+                }
+                else
+                {
+                    ConsoleColor.Red.WriteConsole("Capacity format is wrong,please select again:");
+                    goto Capacity;
+                }
+               
             }
             else
             {
@@ -167,6 +189,7 @@ namespace Course_app.Controllers
                     foreach ( var group in groups )
                     {
                         var res = $"{group.Name}-{group.Capacity}";
+                        Console.WriteLine(res);
                     }
                 }
                 else

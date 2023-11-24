@@ -16,12 +16,13 @@ namespace Repository.Enums
         GroupSearch,
         GroupSorting,
         StudentCreate,
-        StudentEdit,
         StudentDelete,
+        StudentEdit,
         StudentGetById,
         StudentGetAll,
-        StudentSearch,
         StudentSorting,
+        StudentSearch,
+
    
    
     }

@@ -53,9 +53,9 @@ namespace Repository.Repositories
             switch (sort)
             {
                 case SortType.Asc:
-                    AppDbContext<Student>.Datas.OrderBy(m=>m.Age).ToList(); break;
+                   return  AppDbContext<Student>.Datas.OrderBy(m=>m.Age).ToList(); break;
                  case SortType.Desc:
-                    AppDbContext<Student>.Datas.OrderByDescending(m=>m.Age).ToList();break;
+                   return AppDbContext<Student>.Datas.OrderByDescending(m=>m.Age).ToList();break;
             }
             return null;
         }

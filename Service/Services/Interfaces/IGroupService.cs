@@ -17,6 +17,7 @@ namespace Service.Services.Interfaces
         List<Group> Search(string name);
         List<Group> Sorting(SortType sort);
         void Edit(int groupId, Group group);
-        bool IsGroupNameUnique(string groupName);
+        bool IsGroupName(string groupName);
+        
     }
 }

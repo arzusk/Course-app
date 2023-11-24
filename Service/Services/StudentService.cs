@@ -14,6 +14,7 @@ namespace Service.Services
     public class StudentService : IStudentService
     {
       private readonly IStudentRepository _studentRepository;
+       private List<Student> students = new List<Student>();
         public StudentService()
         {
             _studentRepository=new StudentRepository();
@@ -22,7 +23,6 @@ namespace Service.Services
         {
            _studentRepository.Create(student);
         }
-
         public void Delete(Student student)
         {
            _studentRepository.Delete(student);
@@ -51,6 +51,18 @@ namespace Service.Services
         public List<Student> Sorting(SortType sort)
         {
           return _studentRepository.Sorting(sort);
+        }
+        public bool AddStudentToGroup(Student student, Group group)
+        {
+            if (students.Count <= group.Capacity)
+            {
+                students.Add(student);
+                return true;
+            }
+            else
+            {
+                return false;
+            }
         }
     }
 }

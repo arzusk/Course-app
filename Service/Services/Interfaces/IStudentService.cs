@@ -12,5 +12,6 @@ namespace Service.Services.Interfaces
         List<Student> Search(string fullname);
         List<Student> Sorting(SortType sort);
         void Edit(int id, Student student);
+        bool AddStudentToGroup(Student student, Group group);
     }
 }
