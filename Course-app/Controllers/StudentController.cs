@@ -57,6 +57,7 @@ namespace Course_app.Controllers
             }
             if (_studentService.AddStudentToGroup(student, group))
             {
+           
                 _studentService.Create(student);
                 Console.WriteLine($"Fullname: {student.FullName} Age {student.Age} Phone {student.Phone} Address: {student.Address} Group Name: {group.Name}");
             }
@@ -71,9 +72,18 @@ namespace Course_app.Controllers
             var result = _studentService.GetAll();
             foreach (var student in result)
             {
-                string groupname = student.Group.Name ?? "Group Name Not Found";
-                string res = $"Fullname: {student.FullName} Age {student.Age} Phone {student.Phone} Address: {student.Address} Group Name:{student.Group.Name} ";
-                Console.WriteLine(res);
+                string groupname = student.Group.Name;
+                if (groupname == null)
+                {
+                    Console.WriteLine("Group Name Not Found");
+                }
+                else
+                {
+                    string res = $"Fullname: {student.FullName} Age {student.Age} Phone {student.Phone} Address: {student.Address} Group Name:{student.Group.Name} ";
+                    Console.WriteLine(res);
+                    break;
+
+                }
 
             }
         }
