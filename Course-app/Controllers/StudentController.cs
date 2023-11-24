@@ -3,16 +3,6 @@ using Repository.Enums;
 using Service.Helpers.Extensions;
 using Service.Services;
 using Service.Services.Interfaces;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Net.Http.Headers;
-using System.Numerics;
-using System.Security.Cryptography.X509Certificates;
-using System.Text;
-using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 using Group = Domain.Models.Group;
 
 namespace Course_app.Controllers
@@ -46,7 +36,6 @@ namespace Course_app.Controllers
             string id = Console.ReadLine();
             int groupId;
             bool isValidGroupId = int.TryParse(id, out groupId);
-
             if (!isValidGroupId)
             {
                 ConsoleColor.Red.WriteConsole("Invalid Group Id. Please enter a valid number.");
@@ -66,7 +55,6 @@ namespace Course_app.Controllers
                 Console.WriteLine(" Please initialize it before using.");
                 return;
             }
-
             if (_studentService.AddStudentToGroup(student, group))
             {
                 _studentService.Create(student);
@@ -74,9 +62,8 @@ namespace Course_app.Controllers
             }
             else
             {
-                ConsoleColor.Red.WriteConsole($"Group {group.Id} is at full capacity.");
+                ConsoleColor.Red.WriteConsole($"Group {group.Id} is at full capacity. Student creation failed.");
             }
-
         }
 
         public void GetAll()

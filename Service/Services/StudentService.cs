@@ -14,7 +14,7 @@ namespace Service.Services
     public class StudentService : IStudentService
     {
       private readonly IStudentRepository _studentRepository;
-       private List<Student> students = new List<Student>();
+      
         public StudentService()
         {
             _studentRepository=new StudentRepository();
@@ -54,9 +54,9 @@ namespace Service.Services
         }
         public bool AddStudentToGroup(Student student, Group group)
         {
-            if (students.Count <= group.Capacity)
+            if(_studentRepository.GetAll().Count <= group.Capacity)
             {
-                students.Add(student);
+                _studentRepository.Create(student);
                 return true;
             }
             else
