@@ -14,18 +14,17 @@ namespace Repository.Repositories
     {
         public void Edit(int id, Student student)
         {
-           Student existStudent=AppDbContext<Student>.Datas.FirstOrDefault(x => x.Id == id);
-     
-            if (student.FullName is not null)
-            existStudent.FullName= student.FullName;
+           Student existStudent=GetById(id);
+            if (!string.IsNullOrWhiteSpace(student.FullName))
+                existStudent.FullName = student.FullName;
 
-            if (student.Age is not null)
+            if (student.Age is not 0)
                 existStudent.Age = student.Age;
 
-            if (student.Phone is not null)
+            if (!string.IsNullOrWhiteSpace(student.Phone))
                 existStudent.Phone = student.Phone;
 
-            if (student.Address is not null)
+            if (!string.IsNullOrWhiteSpace(student.Address))
                 existStudent.Address = student.Address;
 
             if (student.Group != null)
@@ -35,19 +34,17 @@ namespace Repository.Repositories
                     existStudent.Group = new Group();
                 }
 
-                if (student.Group.Name != null)
+                if (!string.IsNullOrWhiteSpace(student.Group.Name))
                 {
                     existStudent.Group.Name = student.Group.Name;
                 }
             }
 
         }
-
         public List<Student> Search(string fullname)
         {
-           return AppDbContext<Student>.Datas.Where(m=>m.FullName == fullname).ToList();
+           return AppDbContext<Student>.Datas.Where(m=>m.FullName.ToLower().Trim().Contains(fullname.ToLower().Trim())).ToList();
         }
-
         public List<Student> Sorting(SortType sort)
         {
             switch (sort)

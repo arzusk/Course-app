@@ -21,30 +21,45 @@ namespace Course_app.Controllers
         {
             _accountService=new AccountService();
         }
-
         public void Register()
         {
         Name: Console.WriteLine("Add your Name:");
             string name=Console.ReadLine();
-            Console.WriteLine("Add your Surname :");
+            if (!RegisterExcentions.CheckNameorSurnameFormat(name))
+            {
+                ConsoleColor.Red.WriteConsole("Name is Required");
+                goto Name;
+            }
+          Surname:  Console.WriteLine("Add your Surname :");
             string surname=Console.ReadLine();
-            Age: Console.WriteLine("Add your age:");
+            if (!RegisterExcentions.CheckNameorSurnameFormat(surname))
+            {
+                ConsoleColor.Red.WriteConsole("Surname is Required");
+                goto Surname;
+            }
+        Age: Console.WriteLine("Add your age:");
             string ageStr = Console.ReadLine();
             int age;
             bool isCorrectAge = int.TryParse(ageStr, out age);
+          
             if (!isCorrectAge)
             {
                 ConsoleColor.Red.WriteConsole("Age Format incorrect,please write correct age");
                 goto Age;
             }
-            Console.WriteLine("Add your Email:");
+            if (age < 15 || age > 60)
+            {
+                Console.WriteLine("Age incorrect");
+                goto Age;
+            }
+        Email: Console.WriteLine("Add your Email:");
             string email = Console.ReadLine();
-            if (!email.Contains("@"))
+            if (!RegisterExcentions.IsValidEmailFormat(email))
             {
                 ConsoleColor.Red.WriteConsole("Email incorrect,please write correct email");
-                goto Name;
+                goto Email;
             }
-            Console.WriteLine("Add your password :");
+            Password: Console.WriteLine("Add your password :");
             string password = Console.ReadLine();
             Console.WriteLine("Please add Confirmpassword: ");
             string confirmpassword = Console.ReadLine();        
@@ -64,7 +79,7 @@ namespace Course_app.Controllers
             else
             {
                 ConsoleColor.Red.WriteConsole("Confirmpassword and Password are incorrect");
-                Register();
+                goto Password;
             }
         }
 
@@ -84,7 +99,7 @@ namespace Course_app.Controllers
                 goto Email;
             }
 
-            if (!email.Contains("@"))
+            if (!RegisterExcentions.IsValidEmailFormat(email))
             {
                 ConsoleColor.Red.WriteConsole("Email incorrect,please write correct email");
                 goto Email;

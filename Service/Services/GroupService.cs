@@ -14,14 +14,17 @@ namespace Service.Services
     public class GroupService : IGroupService
     {
         private readonly IGroupRepository _repository;
-       
+        private static int _id = 1;
+
         public GroupService()
         {
+
             _repository = new GroupRepository();
                 
         }
         public void Create(Group group)
         {
+            group.Id = _id++;
            _repository.Create(group);
         }
 

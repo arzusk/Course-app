@@ -4,7 +4,9 @@ using Domain.Models;
 using Repository.Enums;
 using Service.Helpers.Extensions;
 
-AccountController accountController = new AccountController();
+AccountController accountController = new();
+
+
 GetMenues();
 while (true)
 {
@@ -21,7 +23,7 @@ Operation: string opearionStr = Console.ReadLine();
                 break;
             case 2:
                 accountController.Login();
-               GetStudentAndGroup(); 
+                GetStudentAndGroup();
                 break;
             default:
                 ConsoleColor.Red.WriteConsole("Operation is wrong, please try again : ");
@@ -38,11 +40,11 @@ Operation: string opearionStr = Console.ReadLine();
 
 static void GetStudentAndGroup()
 {
+    StudentController studentController = new();
+    GroupController groupController = new();
     while (true)
     {
         GroupAndStudentsMenues();
-        StudentController studentController = new StudentController();
-        GroupController groupController = new GroupController();
     Operation: string operations = Console.ReadLine();
         int operation;
         bool isCorrectOperation = int.TryParse(operations, out operation);
@@ -72,21 +74,21 @@ static void GetStudentAndGroup()
                     groupController.Filter();
                     break;
                 case (int)OperationType.StudentCreate:
-                    studentController.StudentCreate();
+                    studentController.Create();
                     goto Operation;
                 case (int)OperationType.StudentDelete:
                     studentController.Delete();
                     goto Operation;
 
                 case (int)OperationType.StudentEdit:
-                    studentController.EditStudent();
+                    studentController.Edit();
                     break;
                 case (int)OperationType.StudentGetById:
                     studentController.GetById();
                     break;
                 case (int)OperationType.StudentGetAll:
                     studentController.GetAll();
-                    break;
+                   goto Operation;
                 case (int)OperationType.StudentSorting:
                     studentController.Filter();
                     break;

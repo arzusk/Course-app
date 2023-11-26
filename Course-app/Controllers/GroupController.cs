@@ -11,22 +11,23 @@ using System.Threading.Tasks;
 
 namespace Course_app.Controllers
 {
-    internal class GroupController
+    public class GroupController
     {
         private readonly GroupService _groupService;
         public GroupController()
         {
             _groupService = new GroupService();
         }
-             
+
         public void CreateGroup()
         {
-            GroupName: ConsoleColor.White.WriteConsole("Add group name:");
-            string groupName=Console.ReadLine();
-            Capacity: ConsoleColor.White.WriteConsole("Enter group capacity:");
-            string groupCapacity=Console.ReadLine();
+        GroupName: ConsoleColor.White.WriteConsole("Add group name:");
+            string groupName = Console.ReadLine();
+        Capacity: ConsoleColor.White.WriteConsole("Enter group capacity:");
+            string groupCapacity = Console.ReadLine();
             int capacity;
-            bool isCorrectCapacity=int.TryParse(groupCapacity, out capacity);
+            bool isCorrectCapacity = int.TryParse(groupCapacity, out capacity);
+
             Group group = new()
             {
                 Name = groupName,
@@ -34,9 +35,11 @@ namespace Course_app.Controllers
 
             };
 
+
             if (isCorrectCapacity)
             {
-                if (_groupService.IsGroupName(group.Name))
+
+                if (_groupService.IsGroupName(groupName))
                 {
                     _groupService.Create(group);
                     Console.WriteLine($"Group-{group.Name}-{group.Capacity} created with ID:-{group.Id}");
@@ -52,20 +55,23 @@ namespace Course_app.Controllers
                 ConsoleColor.Red.WriteConsole("Capacity format is wrong,please select again:");
                 goto Capacity;
             }
-          
+
 
         }
         public void GetAll()
         {
             var result = _groupService.GetAll();
-
+            if (result.Count == 0)
+            {
+                ConsoleColor.Red.WriteConsole("Not Found");
+            }
             foreach (var item in result)
             {
                 string res = $"Group Name:{item.Name} Group Capacity:{item.Capacity} - {item.Id} ";
                 ConsoleColor.White.WriteConsole(res);
             }
-        }
 
+        }
         public void GetById()
         {
 
@@ -96,43 +102,53 @@ namespace Course_app.Controllers
 
         public void EditGroup()
         {
-            Console.WriteLine("Add group id :");
-           Id: string idStr=Console.ReadLine();
+            Console.WriteLine("Add Group id:");
+        Id: string idStr = Console.ReadLine();
             int id;
-            bool IsCorrectId=int.TryParse(idStr, out id);
+            bool IsCorrectId = int.TryParse(idStr, out id);
+
             if (IsCorrectId)
             {
-                var group=_groupService.GetById(id) ;
-                if(group is null)
+                var group = _groupService.GetById(id);
+
+                if (group is null)
                 {
-                    Console.WriteLine("Data not found");
+                    Console.WriteLine("Group not found");
+                    goto Id;
                 }
-                Console.WriteLine("Enter Group Name :");
-                string name = Console.ReadLine();
-            Capacity: ConsoleColor.White.WriteConsole("Edit group capacity:");
-                string groupCapacity = Console.ReadLine();
-                int capacity;
-                bool isCorrectCapacity = int.TryParse(groupCapacity, out capacity);
-                if (isCorrectCapacity)
-                {
-                    _groupService.Edit(id, new Group { Name = name,Capacity=capacity });
-                    ConsoleColor.Green.WriteConsole("Successful edit");
-                }
+
                 else
                 {
-                    ConsoleColor.Red.WriteConsole("Capacity format is wrong,please select again:");
-                    goto Capacity;
+                    Console.WriteLine("Edit Group Name:");
+                    string groupName = Console.ReadLine();
+                    Console.Write("Edit group capacity:");
+                Capacity: string groupCapacity = Console.ReadLine();                                                                                //////////488/
+                    int capacity;
+                    bool isCorrectCapacity = int.TryParse(groupCapacity, out capacity);
+                    if (string.IsNullOrWhiteSpace(groupCapacity))
+                    {
+                        capacity = (int)group.Capacity;
+                        goto End;
+                    }
+                    if( !isCorrectCapacity)
+                    {
+                        ConsoleColor.Red.WriteConsole("Capacity format is wrong, please select again:");
+                        goto Capacity;
+                    }
+                End: _groupService.Edit(id, new Group { Capacity = capacity, Name = groupName });
+                    ConsoleColor.Green.WriteConsole("Edit successful");
                 }
-               
             }
             else
             {
-                ConsoleColor.Red.WriteConsole("Id format is wrong,please select again: ");
+                ConsoleColor.Red.WriteConsole("Id format is wrong, please select again: ");
                 goto Id;
             }
 
-
         }
+
+
+
 
         public void Delete()
         {
@@ -154,29 +170,33 @@ namespace Course_app.Controllers
 
             }
         }
-        public void Search() 
+        public void Search()
         {
             Console.WriteLine("Search Group:");
-            string groupName=Console.ReadLine();
-            var datas=_groupService.Search(groupName);
-            foreach ( var data in datas )
+            string groupName = Console.ReadLine();
+            var datas = _groupService.Search(groupName);
+            foreach (var data in datas)
             {
                 string res = $"Group Name:{data.Name} Group Capacity:{data.Capacity} - {data.Id} ";
                 ConsoleColor.White.WriteConsole(res);
             }
+            if (datas.Count == 0)
+            {
+                ConsoleColor.Red.WriteConsole("Not Found");
+            }
         }
-        public void Filter() 
+        public void Filter()
         {
             Console.WriteLine("Select Group Sort Type: Ascending-(1), Descending-(2)");
-            SortType: string sortStr=Console.ReadLine();
+        SortType: string sortStr = Console.ReadLine();
             int sortType;
-            bool isCorrectSortType=int.TryParse(sortStr, out sortType);
+            bool isCorrectSortType = int.TryParse(sortStr, out sortType);
             if (isCorrectSortType)
             {
-                if(sortType==(int)SortType.Asc || sortType == (int)SortType.Desc)
+                if (sortType == (int)SortType.Asc || sortType == (int)SortType.Desc)
                 {
                     List<Group> groups = new();
-                    if(sortType == (int)SortType.Asc)
+                    if (sortType == (int)SortType.Asc)
                     {
                         groups = _groupService.Sorting(SortType.Asc);
 
@@ -186,7 +206,7 @@ namespace Course_app.Controllers
                         groups = _groupService.Sorting(SortType.Desc);
                     }
 
-                    foreach ( var group in groups )
+                    foreach (var group in groups)
                     {
                         var res = $"{group.Name}-{group.Capacity}";
                         Console.WriteLine(res);

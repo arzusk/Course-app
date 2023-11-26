@@ -3,6 +3,7 @@ using Repository.Data;
 using Repository.Repositories.Interfaces;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -11,12 +12,13 @@ namespace Repository.Repositories
 {
     public class BaseRepository<T> : IBaseRepository<T> where T : BaseEntity
     {
-        private static int _id = 1;
+     
         public void Create(T entity)
         {
-            entity.Id = _id++;
+        
             AppDbContext<T>.Datas.Add(entity);
         }
+
 
         public void Delete(T entity)
         {

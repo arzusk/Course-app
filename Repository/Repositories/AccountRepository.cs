@@ -14,7 +14,7 @@ namespace Repository.Repositories
         public bool Login(string email, string password)
         {
            User user=AppDbContext<User>.Datas.FirstOrDefault(m=>m.Email==email && m.Password==password);
-          return user != null;
+           return user != null;
         }
 
         public bool Register(User user, string confirmPassword)

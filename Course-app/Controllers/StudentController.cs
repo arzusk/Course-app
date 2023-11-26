@@ -3,11 +3,13 @@ using Repository.Enums;
 using Service.Helpers.Extensions;
 using Service.Services;
 using Service.Services.Interfaces;
+using System.Net;
+using System.Xml.Linq;
 using Group = Domain.Models.Group;
 
 namespace Course_app.Controllers
 {
-    internal class StudentController
+    public class StudentController
     {
         private readonly IStudentService _studentService;
         public StudentController()
@@ -15,77 +17,96 @@ namespace Course_app.Controllers
             _studentService = new StudentService();
         }
 
-        public void StudentCreate()
+        public void Create()
         {
-            ConsoleColor.White.WriteConsole("Add Fullname:");
+
+        Fullname: ConsoleColor.White.WriteConsole("Add Fullname:");
             string fullname = Console.ReadLine();
+            if (!RegisterExcentions.CheckFullName(fullname))
+            {
+                ConsoleColor.Red.WriteConsole("Fullname is Required");
+                goto Fullname;
+            }
+
         Age: ConsoleColor.White.WriteConsole("Add your age:");
             string ageStr = Console.ReadLine();
             int age;
             bool isCorrectAge = int.TryParse(ageStr, out age);
-            if (!isCorrectAge)
+            if (!isCorrectAge )
             {
                 ConsoleColor.Red.WriteConsole("Age Format incorrect,please write correct age");
                 goto Age;
             }
+           if(age<15 || age>60)
+            {
+                Console.WriteLine("Age incorrect");
+                goto Age;
+            }
             ConsoleColor.White.WriteConsole("Add address:");
             string address = Console.ReadLine();
-            ConsoleColor.White.WriteConsole("Add Phone:");
+        PhoneNumber: ConsoleColor.White.WriteConsole("Add Phone:");
             string phone = Console.ReadLine();
-            ConsoleColor.White.WriteConsole("Group Id:");
+            if (!RegisterExcentions.CheckPhoneNumber(phone))
+            {
+                ConsoleColor.Red.WriteConsole("Phone Number Format Incorrect");
+                goto PhoneNumber;
+            }
+        Id: ConsoleColor.White.WriteConsole("Group Id:");
             string id = Console.ReadLine();
             int groupId;
             bool isValidGroupId = int.TryParse(id, out groupId);
             if (!isValidGroupId)
             {
                 ConsoleColor.Red.WriteConsole("Invalid Group Id. Please enter a valid number.");
-                return;
+                goto Id;
             }
+
             GroupService groupService = new GroupService();
             Group group = groupService.GetById(groupId);
+
+
             if (group == null)
             {
-                ConsoleColor.Red.WriteConsole($"Group with Id not found. Please enter a valid Group Id.");
+                ConsoleColor.Red.WriteConsole($"Group with Id not found,please create Group");
                 return;
             }
-            Student student = new Student(groupId, fullname, address, age, phone, group.Name);
+            Student student = new(groupId, fullname, address, age, phone, group.Name);
 
             if (_studentService == null)
             {
                 Console.WriteLine(" Please initialize it before using.");
                 return;
             }
-            if (_studentService.AddStudentToGroup(student, group))
+
+            if (CheckStudentCreate.Check(student, group))
             {
-           
                 _studentService.Create(student);
                 Console.WriteLine($"Fullname: {student.FullName} Age {student.Age} Phone {student.Phone} Address: {student.Address} Group Name: {group.Name}");
+
             }
             else
             {
+
                 ConsoleColor.Red.WriteConsole($"Group {group.Id} is at full capacity. Student creation failed.");
+
+
             }
         }
 
         public void GetAll()
         {
             var result = _studentService.GetAll();
-            foreach (var student in result)
+            if (result.Count == 0)
             {
-                string groupname = student.Group.Name;
-                if (groupname == null)
-                {
-                    Console.WriteLine("Group Name Not Found");
-                }
-                else
-                {
-                    string res = $"Fullname: {student.FullName} Age {student.Age} Phone {student.Phone} Address: {student.Address} Group Name:{student.Group.Name} ";
-                    Console.WriteLine(res);
-                    break;
-
-                }
+                ConsoleColor.Red.WriteConsole("Not Found");
 
             }
+            foreach (var student in result)
+            {
+                string res = $"Fullname: {student.FullName} Age {student.Age} Phone {student.Phone} Address: {student.Address} Group Name:{student.Group.Name} ";
+                Console.WriteLine(res);
+            }
+
         }
         public void GetById()
         {
@@ -100,6 +121,7 @@ namespace Course_app.Controllers
 
                 if (student != null)
                 {
+                    _studentService.Create(student);
                     Console.WriteLine($"Student Name: {student.FullName} Student Age :{student.Age} Student Address:{student.Address} Student Phone :{student.Phone}");
                 }
                 else
@@ -132,7 +154,7 @@ namespace Course_app.Controllers
             }
 
         }
-        public void EditStudent()
+        public void Edit()
         {
             Console.WriteLine("Add Student id :");
         Id: string idStr = Console.ReadLine();
@@ -153,19 +175,34 @@ namespace Course_app.Controllers
                     string ageStr = Console.ReadLine();
                     int age;
                     bool isCorrectAge = int.TryParse(ageStr, out age);
-                    if (!isCorrectAge)
+                    if (isCorrectAge)
                     {
-                        ConsoleColor.Red.WriteConsole("Age Format incorrect,please write correct age");
+                        if (string.IsNullOrWhiteSpace(ageStr))
+                        {
+                            age = student.Age;
+                            goto Address;
+                        }
+                      
+                    }
+                    else
+                    {
+                        ConsoleColor.Red.WriteConsole("Age Format incorrect");
                         goto Age;
                     }
-                    ConsoleColor.White.WriteConsole("Add address:");
+                Address: ConsoleColor.White.WriteConsole("Add address:");
                     string address = Console.ReadLine();
-                    ConsoleColor.White.WriteConsole("Add Phone:");
+                PhoneNumber: ConsoleColor.White.WriteConsole("Add Phone:");
                     string phone = Console.ReadLine();
+                    if (!RegisterExcentions.CheckPhoneNumber(phone))
+                    {
+                        ConsoleColor.Red.WriteConsole("Phone Number Format Incorrect");
+                        goto PhoneNumber;
+                    }
                     ConsoleColor.White.WriteConsole("If you want to change your group, enter the group name you want to change:");
                     string groupName = Console.ReadLine();
 
                     Student student1 = new(id, fullname, address, age, phone, groupName);
+
                     _studentService.Edit(id, student1);
                     ConsoleColor.Green.WriteConsole("Edit successful");
                 }
@@ -187,6 +224,11 @@ namespace Course_app.Controllers
             foreach (var data in datas)
             {
                 Console.WriteLine($"Fullname: {data.FullName} Age {data.Age} Phone {data.Phone} Address: {data.Address} Group Name:{data.Group.Name}");
+                break;
+            }
+            if (datas.Count == 0)
+            {
+                ConsoleColor.Red.WriteConsole("Not Found");
             }
         }
         public void Filter()

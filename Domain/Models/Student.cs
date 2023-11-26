@@ -11,10 +11,10 @@ namespace Domain.Models
     {
         public string FullName { get; set; }
         public string Address { get; set; }
-        public int? Age { get; set; }
+        public int Age { get; set; }
         public string Phone { get; set; }
         public Group Group { get; set; }
-        public Student(int id,string fullname,string address,int? age,string phone,string name)
+        public Student(int id, string fullname, string address, int age, string phone, string name)
         {
             Id = id;
             FullName = fullname;

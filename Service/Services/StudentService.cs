@@ -1,4 +1,5 @@
 ﻿using Domain.Models;
+using Repository.Data;
 using Repository.Enums;
 using Repository.Repositories;
 using Repository.Repositories.Interfaces;
@@ -13,15 +14,17 @@ namespace Service.Services
 {
     public class StudentService : IStudentService
     {
-      private readonly IStudentRepository _studentRepository;
-      
+        private readonly IStudentRepository _studentRepository;
+        private static int _id = 1;
         public StudentService()
         {
             _studentRepository=new StudentRepository();
         }
         public void Create(Student student)
         {
-           _studentRepository.Create(student);
+            student.Id = _id++;
+            _studentRepository.Create(student);
+           
         }
         public void Delete(Student student)
         {
@@ -52,17 +55,6 @@ namespace Service.Services
         {
           return _studentRepository.Sorting(sort);
         }
-        public bool AddStudentToGroup(Student student, Group group)
-        {
-            if(_studentRepository.GetAll().Count <= group.Capacity)
-            {
-                _studentRepository.Create(student);
-                return true;
-            }
-            else
-            {
-                return false;
-            }
-        }
+      
     }
 }
