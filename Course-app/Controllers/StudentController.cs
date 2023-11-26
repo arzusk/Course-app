@@ -4,6 +4,9 @@ using Service.Helpers.Extensions;
 using Service.Services;
 using Service.Services.Interfaces;
 using System.Net;
+using System.Net.Cache;
+using System.Numerics;
+using System.Reflection.Metadata.Ecma335;
 using System.Xml.Linq;
 using Group = Domain.Models.Group;
 
@@ -22,6 +25,11 @@ namespace Course_app.Controllers
 
         Fullname: ConsoleColor.White.WriteConsole("Add Fullname:");
             string fullname = Console.ReadLine();
+            if (string.IsNullOrWhiteSpace(fullname))
+            {
+                ConsoleColor.Red.WriteConsole("Dont be Empty");
+                goto Fullname;
+            }
             if (!RegisterExcentions.CheckFullName(fullname))
             {
                 ConsoleColor.Red.WriteConsole("Fullname is Required");
@@ -32,20 +40,36 @@ namespace Course_app.Controllers
             string ageStr = Console.ReadLine();
             int age;
             bool isCorrectAge = int.TryParse(ageStr, out age);
-            if (!isCorrectAge )
+            if (!isCorrectAge)
             {
                 ConsoleColor.Red.WriteConsole("Age Format incorrect,please write correct age");
                 goto Age;
             }
-           if(age<15 || age>60)
+
+            if (string.IsNullOrWhiteSpace(ageStr))
+            {
+                ConsoleColor.Red.WriteConsole("Don't be Empty,please enter your Age");
+                goto Age;
+            }
+            if (age < 15 || age > 60)
             {
                 Console.WriteLine("Age incorrect");
                 goto Age;
             }
-            ConsoleColor.White.WriteConsole("Add address:");
+        Address: ConsoleColor.White.WriteConsole("Add address:");
             string address = Console.ReadLine();
+            if (string.IsNullOrWhiteSpace(address))
+            {
+                ConsoleColor.Red.WriteConsole("Dont be Empty");
+                goto Address;
+            }
         PhoneNumber: ConsoleColor.White.WriteConsole("Add Phone:");
             string phone = Console.ReadLine();
+            if (string.IsNullOrWhiteSpace(phone))
+            {
+                ConsoleColor.Red.WriteConsole("Dont be Empty");
+                goto PhoneNumber;
+            }
             if (!RegisterExcentions.CheckPhoneNumber(phone))
             {
                 ConsoleColor.Red.WriteConsole("Phone Number Format Incorrect");
@@ -127,6 +151,7 @@ namespace Course_app.Controllers
                 else
                 {
                     ConsoleColor.Red.WriteConsole("Student not found with the given Id.");
+                    goto Id;
                 }
             }
             else
@@ -152,74 +177,88 @@ namespace Course_app.Controllers
             {
                 ConsoleColor.Red.WriteConsole("ID Format is wrong,please select again:");
             }
-
         }
         public void Edit()
         {
-            Console.WriteLine("Add Student id :");
-        Id: string idStr = Console.ReadLine();
+            Console.WriteLine("Add Student id:");
+        Id:
+            string idStr = Console.ReadLine();
             int id;
-            bool IsCorrectId = int.TryParse(idStr, out id);
-            if (IsCorrectId)
+            bool isCorrectId = int.TryParse(idStr, out id);
+
+            if (isCorrectId)
             {
                 var student = _studentService.GetById(id);
                 if (student is null)
                 {
-                    Console.WriteLine("Student not found");
+                    ConsoleColor.Red.WriteConsole("Data Not Found, Please Enter Correct Id");
+                    goto Id;
                 }
                 else
                 {
-                    Console.WriteLine("Enter Student Fullname :");
-                    string fullname = Console.ReadLine();
-                Age: ConsoleColor.White.WriteConsole("Add your age:");
-                    string ageStr = Console.ReadLine();
-                    int age;
-                    bool isCorrectAge = int.TryParse(ageStr, out age);
-                    if (isCorrectAge)
-                    {
-                        if (string.IsNullOrWhiteSpace(ageStr))
-                        {
-                            age = student.Age;
-                            goto Address;
-                        }
-                      
-                    }
-                    else
-                    {
-                        ConsoleColor.Red.WriteConsole("Age Format incorrect");
-                        goto Age;
-                    }
-                Address: ConsoleColor.White.WriteConsole("Add address:");
+                    Console.WriteLine("Edit Student Name:");
+                    string name = Console.ReadLine();
+                    Console.WriteLine("Edit Address:");
                     string address = Console.ReadLine();
-                PhoneNumber: ConsoleColor.White.WriteConsole("Add Phone:");
-                    string phone = Console.ReadLine();
-                    if (!RegisterExcentions.CheckPhoneNumber(phone))
+
+                    Console.WriteLine("Edit Student Age:");
+                    string age = Console.ReadLine();
+                    int intAge;
+                    bool isCorrectAge = int.TryParse(age, out intAge);
+                    if (!isCorrectAge && !string.IsNullOrWhiteSpace(age))
                     {
-                        ConsoleColor.Red.WriteConsole("Phone Number Format Incorrect");
-                        goto PhoneNumber;
+                        ConsoleColor.Red.WriteConsole("Age Format Incorrect, please add correct age ");
+                        goto Id;
                     }
-                    ConsoleColor.White.WriteConsole("If you want to change your group, enter the group name you want to change:");
-                    string groupName = Console.ReadLine();
 
-                    Student student1 = new(id, fullname, address, age, phone, groupName);
+                    Console.WriteLine("Edit Phone:");
+                    string phone = Console.ReadLine();
 
-                    _studentService.Edit(id, student1);
+                    Console.WriteLine("If you want to change your group, enter the new group Id:");
+                    string groupIdStr = Console.ReadLine();
+
+                    int groupId;
+                    bool isCorrectGroupId = int.TryParse(groupIdStr, out groupId);
+                    if (string.IsNullOrWhiteSpace(groupIdStr))
+                    {
+                        groupId = student.Group.Id;
+                    }
+                    else if (!isCorrectGroupId)
+                    {
+                        ConsoleColor.Red.WriteConsole("Invalid Group Id. Please enter a valid number.");
+                        goto Id;
+                    }
+                    name = string.IsNullOrWhiteSpace(name) ? student.FullName : name;
+                    address = string.IsNullOrWhiteSpace(address) ? student.Address : address;
+                    intAge = string.IsNullOrWhiteSpace(age) ? student.Age : intAge;
+                    phone = string.IsNullOrWhiteSpace(phone) ? student.Phone : phone;
+                    groupId = string.IsNullOrWhiteSpace(groupIdStr) ? student.Group.Id : groupId;
+                    student.FullName = name;
+                    student.Address = address;
+                    student.Age = intAge;
+                    student.Phone = phone;
+                    student.Group.Id = groupId;
+
+                    _studentService.Edit(id, student);
                     ConsoleColor.Green.WriteConsole("Edit successful");
                 }
-
             }
-            else
-            {
-                ConsoleColor.Red.WriteConsole("Id format is wrong,please select again: ");
-                goto Id;
-            }
-
         }
+
+
+
 
         public void Search()
         {
-            Console.WriteLine("Search student:");
+        Name: Console.WriteLine("Search student:");
             string studentName = Console.ReadLine();
+            if (string.IsNullOrWhiteSpace(studentName))
+            {
+
+                ConsoleColor.Red.WriteConsole("Dont be Empty");
+                goto Name;
+
+            }
             var datas = _studentService.Search(studentName);
             foreach (var data in datas)
             {
@@ -233,10 +272,18 @@ namespace Course_app.Controllers
         }
         public void Filter()
         {
-            Console.WriteLine("Select Student Sort Type: Ascending-(1), Descending-(2)");
-        SortType: string sortStr = Console.ReadLine();
+        SortType: Console.WriteLine("Select Student Sort Type: Ascending-(1), Descending-(2)");
+            string sortStr = Console.ReadLine();
+
+            if (string.IsNullOrWhiteSpace(sortStr))
+            {
+                ConsoleColor.Red.WriteConsole("Sort Type cannot be empty, please select again:");
+                goto SortType;
+            }
+
             int sortType;
             bool isCorrectSortType = int.TryParse(sortStr, out sortType);
+
             if (isCorrectSortType)
             {
                 if (sortType == (int)SortType.Asc || sortType == (int)SortType.Desc)
@@ -245,7 +292,6 @@ namespace Course_app.Controllers
                     if (sortType == (int)SortType.Asc)
                     {
                         students = _studentService.Sorting(SortType.Asc);
-
                     }
                     else
                     {
@@ -260,16 +306,17 @@ namespace Course_app.Controllers
                 }
                 else
                 {
-                    ConsoleColor.Red.WriteConsole("Sort Type is wrong,please select again:");
+                    ConsoleColor.Red.WriteConsole("Sort Type is wrong, please select again:");
                     goto SortType;
                 }
             }
             else
             {
-                ConsoleColor.Red.WriteConsole("Sort Type Format is wrong,please select again:");
+                ConsoleColor.Red.WriteConsole("Sort Type Format is wrong, please select again:");
                 goto SortType;
             }
         }
+
 
     }
 

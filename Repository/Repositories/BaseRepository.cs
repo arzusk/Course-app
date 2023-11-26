@@ -22,8 +22,14 @@ namespace Repository.Repositories
 
         public void Delete(T entity)
         {
-            AppDbContext<T>.Datas.Remove(entity);
+            var existingEntity = AppDbContext<T>.Datas.FirstOrDefault(e => e != null && e.Id == entity.Id);
+
+            if (existingEntity != null)
+            {
+                AppDbContext<T>.Datas.Remove(existingEntity);
+            }
         }
+
 
         public List<T> GetAll()
         {

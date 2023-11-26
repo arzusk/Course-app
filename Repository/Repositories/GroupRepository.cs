@@ -14,24 +14,26 @@ namespace Repository.Repositories
     {
         public void Edit(int groupId, Group group)
         {
-
             Group existGroup = GetById(groupId);
 
             if (existGroup != null)
             {
-                if (!string.IsNullOrWhiteSpace(existGroup.Name))
+                if (!string.IsNullOrWhiteSpace(group.Name))
                 {
                     existGroup.Name = group.Name;
                 }
-                if (existGroup.Capacity is not null)
+
+                if (group.Capacity.HasValue)
                 {
                     existGroup.Capacity = group.Capacity;
                 }
             }
+        
+    
 
 
-        }
-        public List<Group> Search(string name)
+    }
+    public List<Group> Search(string name)
         {
             return AppDbContext<Group>.Datas.Where(m => m.Name.ToLower().Trim().Contains(name.ToLower().Trim())).ToList();
         }

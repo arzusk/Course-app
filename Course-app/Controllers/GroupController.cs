@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 
 namespace Course_app.Controllers
 {
@@ -23,8 +24,18 @@ namespace Course_app.Controllers
         {
         GroupName: ConsoleColor.White.WriteConsole("Add group name:");
             string groupName = Console.ReadLine();
+            if (string.IsNullOrWhiteSpace(groupName))
+            {
+                ConsoleColor.Red.WriteConsole("Don't be Empty");
+                goto GroupName;
+            }
         Capacity: ConsoleColor.White.WriteConsole("Enter group capacity:");
             string groupCapacity = Console.ReadLine();
+            if (string.IsNullOrWhiteSpace(groupCapacity))
+            {
+                ConsoleColor.Red.WriteConsole("Don't be Empty");
+                goto Capacity;
+            }
             int capacity;
             bool isCorrectCapacity = int.TryParse(groupCapacity, out capacity);
 
@@ -35,7 +46,7 @@ namespace Course_app.Controllers
 
             };
 
-
+           
             if (isCorrectCapacity)
             {
 
@@ -77,6 +88,11 @@ namespace Course_app.Controllers
 
         Id: Console.WriteLine("Add id :");
             string idStr = Console.ReadLine();
+            if (string.IsNullOrWhiteSpace(idStr))
+            {
+                ConsoleColor.Red.WriteConsole("Don't be Empty");
+                goto Id;
+            }
             int id;
             bool IsCorrectId = int.TryParse(idStr, out id);
             if (IsCorrectId)
@@ -90,6 +106,7 @@ namespace Course_app.Controllers
                 else
                 {
                     ConsoleColor.Red.WriteConsole("Group not found with the given Id.");
+                    goto Id;
                 }
             }
             else
@@ -103,7 +120,13 @@ namespace Course_app.Controllers
         public void EditGroup()
         {
             Console.WriteLine("Add Group id:");
-        Id: string idStr = Console.ReadLine();
+        Id:
+            string idStr = Console.ReadLine();
+            if (string.IsNullOrWhiteSpace(idStr))
+            {
+                ConsoleColor.Red.WriteConsole("Don't be Empty");
+                goto Id;
+            }
             int id;
             bool IsCorrectId = int.TryParse(idStr, out id);
 
@@ -116,27 +139,38 @@ namespace Course_app.Controllers
                     Console.WriteLine("Group not found");
                     goto Id;
                 }
-
                 else
                 {
-                    Console.WriteLine("Edit Group Name:");
+                    GName: Console.WriteLine("Edit Group Name:");
                     string groupName = Console.ReadLine();
+      
                     Console.Write("Edit group capacity:");
-                Capacity: string groupCapacity = Console.ReadLine();                                                                                //////////488/
-                    int capacity;
-                    bool isCorrectCapacity = int.TryParse(groupCapacity, out capacity);
-                    if (string.IsNullOrWhiteSpace(groupCapacity))
+                Capacity:
+                    string groupCapacity = Console.ReadLine();
+                    int? capacity = null;
+
+                    if (!string.IsNullOrWhiteSpace(groupCapacity))
                     {
-                        capacity = (int)group.Capacity;
-                        goto End;
+                        bool isCorrectCapacity = int.TryParse(groupCapacity, out int parsedCapacity);
+                        if (isCorrectCapacity)
+                        {
+                            capacity = parsedCapacity;
+                        }
+                        else
+                        {
+                            ConsoleColor.Red.WriteConsole("Capacity format is wrong, please select again:");
+                            goto Capacity;
+                        }
                     }
-                    if( !isCorrectCapacity)
+                    if (!string.IsNullOrWhiteSpace(groupName) || capacity.HasValue)
                     {
-                        ConsoleColor.Red.WriteConsole("Capacity format is wrong, please select again:");
-                        goto Capacity;
+                        _groupService.Edit(id, new Group { Capacity = capacity, Name = groupName });
+                        ConsoleColor.Green.WriteConsole("Edit successful");
                     }
-                End: _groupService.Edit(id, new Group { Capacity = capacity, Name = groupName });
-                    ConsoleColor.Green.WriteConsole("Edit successful");
+                    else
+                    {
+                        ConsoleColor.Green.WriteConsole("No changes made");
+                    }
                 }
             }
             else
@@ -144,9 +178,7 @@ namespace Course_app.Controllers
                 ConsoleColor.Red.WriteConsole("Id format is wrong, please select again: ");
                 goto Id;
             }
-
         }
-
 
 
 
@@ -155,13 +187,19 @@ namespace Course_app.Controllers
             {
                 Console.WriteLine("Add Group id :");
             Id: string idStr = Console.ReadLine();
+                if (string.IsNullOrEmpty(idStr))
+                {
+                    ConsoleColor.Red.WriteConsole("Don't be Empty");
+                    goto Id;
+                }
                 int id;
                 bool IsCorrectId = int.TryParse(idStr, out id);
                 if (IsCorrectId)
                 {
-                    var student = _groupService.GetById(id);
-                    _groupService.Delete(student);
+                    var group = _groupService.GetById(id);
+                    _groupService.Delete(group);
                     Console.WriteLine("Group has been deleted");
+               
                 }
                 else
                 {
@@ -172,8 +210,13 @@ namespace Course_app.Controllers
         }
         public void Search()
         {
-            Console.WriteLine("Search Group:");
+            Name: Console.WriteLine("Search Group:");
             string groupName = Console.ReadLine();
+            if (string.IsNullOrEmpty(groupName))
+            {
+                ConsoleColor.Red.WriteConsole("Don't be Empty");
+                goto Name;
+            }
             var datas = _groupService.Search(groupName);
             foreach (var data in datas)
             {
@@ -189,6 +232,11 @@ namespace Course_app.Controllers
         {
             Console.WriteLine("Select Group Sort Type: Ascending-(1), Descending-(2)");
         SortType: string sortStr = Console.ReadLine();
+            if (string.IsNullOrEmpty(sortStr))
+            {
+                ConsoleColor.Red.WriteConsole("Don't be Empty");
+                goto SortType;
+            }
             int sortType;
             bool isCorrectSortType = int.TryParse(sortStr, out sortType);
             if (isCorrectSortType)

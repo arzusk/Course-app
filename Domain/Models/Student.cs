@@ -21,9 +21,7 @@ namespace Domain.Models
             Address = address;
             Age = age;
             Phone = phone;
-            Group = new Group();
-            Group.Name = name;
+            Group = new Group { Name = name, Capacity = 0 }; 
         }
-
     }
 }

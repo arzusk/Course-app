@@ -15,30 +15,34 @@ namespace Repository.Repositories
         public void Edit(int id, Student student)
         {
            Student existStudent=GetById(id);
-            if (!string.IsNullOrWhiteSpace(student.FullName))
-                existStudent.FullName = student.FullName;
-
-            if (student.Age is not 0)
-                existStudent.Age = student.Age;
-
-            if (!string.IsNullOrWhiteSpace(student.Phone))
-                existStudent.Phone = student.Phone;
-
-            if (!string.IsNullOrWhiteSpace(student.Address))
-                existStudent.Address = student.Address;
-
-            if (student.Group != null)
+            if (existStudent!=null)
             {
-                if (existStudent.Group == null)
-                {
-                    existStudent.Group = new Group();
-                }
+                if (student.FullName is not null)
+                    existStudent.FullName = student.FullName;
 
-                if (!string.IsNullOrWhiteSpace(student.Group.Name))
+                if (student.Age is not 0)
+                    existStudent.Age = student.Age;
+
+                if (student.Phone is not null)
+                    existStudent.Phone = student.Phone;
+
+                if (student.Address is not null)
+                    existStudent.Address = student.Address;
+
+                if (student.Group != null)
                 {
-                    existStudent.Group.Name = student.Group.Name;
+                    if (existStudent.Group == null)
+                    {
+                        existStudent.Group = new Group();
+                    }
+
+                    if (student.Group.Name is not null)
+                    {
+                        existStudent.Group.Name = student.Group.Name;
+                    }
                 }
             }
+           
 
         }
         public List<Student> Search(string fullname)

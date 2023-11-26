@@ -27,14 +27,24 @@ namespace Course_app.Controllers
             string name=Console.ReadLine();
             if (!RegisterExcentions.CheckNameorSurnameFormat(name))
             {
-                ConsoleColor.Red.WriteConsole("Name is Required");
+                ConsoleColor.Red.WriteConsole("Please,Enter correct Name");
+                goto Name;
+            }
+            if(string.IsNullOrWhiteSpace(name))
+            {
+                ConsoleColor.Red.WriteConsole("Don't be Empty");
                 goto Name;
             }
           Surname:  Console.WriteLine("Add your Surname :");
             string surname=Console.ReadLine();
             if (!RegisterExcentions.CheckNameorSurnameFormat(surname))
             {
-                ConsoleColor.Red.WriteConsole("Surname is Required");
+                ConsoleColor.Red.WriteConsole("Please,Enter correct Surname");
+                goto Surname;
+            }
+            if (string.IsNullOrWhiteSpace(surname))
+            {
+                ConsoleColor.Red.WriteConsole("Don't be Empty");
                 goto Surname;
             }
         Age: Console.WriteLine("Add your age:");
@@ -52,6 +62,10 @@ namespace Course_app.Controllers
                 Console.WriteLine("Age incorrect");
                 goto Age;
             }
+            if (string.IsNullOrWhiteSpace(ageStr))
+            {
+                ConsoleColor.Red.WriteConsole("Don't be Empty,please enter your Age");
+            }
         Email: Console.WriteLine("Add your Email:");
             string email = Console.ReadLine();
             if (!RegisterExcentions.IsValidEmailFormat(email))
@@ -59,10 +73,24 @@ namespace Course_app.Controllers
                 ConsoleColor.Red.WriteConsole("Email incorrect,please write correct email");
                 goto Email;
             }
-            Password: Console.WriteLine("Add your password :");
+            if (string.IsNullOrWhiteSpace(email))
+            {
+                ConsoleColor.Red.WriteConsole("Don't be Empty");
+            }
+        Password: Console.WriteLine("Add your password :");
             string password = Console.ReadLine();
-            Console.WriteLine("Please add Confirmpassword: ");
-            string confirmpassword = Console.ReadLine();        
+            if (string.IsNullOrWhiteSpace(password))
+            {
+                ConsoleColor.Red.WriteConsole("Password Dont't be Empty");
+                goto Password;
+            }
+            Confirm: Console.WriteLine("Please add Confirmpassword: ");
+            string confirmpassword = Console.ReadLine();
+            if (string.IsNullOrWhiteSpace(confirmpassword))
+            {
+                ConsoleColor.Red.WriteConsole("Password Dont't be Empty");
+                goto Confirm;
+            }
             User user = new()
             {
                Name=name,
@@ -87,9 +115,19 @@ namespace Course_app.Controllers
         {
             Email: Console.WriteLine("Add your email:  ");
             string email=Console.ReadLine();
-            Console.WriteLine("Add your password:  ");
+            if (string.IsNullOrWhiteSpace(email))
+            {
+                ConsoleColor.Red.WriteConsole("Don't be Empty");
+                goto Email;
+            }
+            Password: Console.WriteLine("Add your password:  ");
             string password=Console.ReadLine();
-            if(_accountService.Login(email, password))
+            if (string.IsNullOrWhiteSpace(password))
+            {
+                ConsoleColor.Red.WriteConsole("Password Dont't be Empty");
+                goto Password;
+            }
+            if (_accountService.Login(email, password))
             {
                 ConsoleColor.Blue.WriteConsole("Welcome our application");
             }

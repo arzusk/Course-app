@@ -42,13 +42,15 @@ static void GetStudentAndGroup()
 {
     StudentController studentController = new();
     GroupController groupController = new();
+
     while (true)
     {
         GroupAndStudentsMenues();
-    Operation: string operations = Console.ReadLine();
+
+        string operationStr = Console.ReadLine();
         int operation;
-        bool isCorrectOperation = int.TryParse(operations, out operation);
-        if (isCorrectOperation)
+
+        if (int.TryParse(operationStr, out operation))
         {
             switch (operation)
             {
@@ -75,11 +77,10 @@ static void GetStudentAndGroup()
                     break;
                 case (int)OperationType.StudentCreate:
                     studentController.Create();
-                    goto Operation;
+                    break;
                 case (int)OperationType.StudentDelete:
                     studentController.Delete();
-                    goto Operation;
-
+                    break;
                 case (int)OperationType.StudentEdit:
                     studentController.Edit();
                     break;
@@ -88,18 +89,25 @@ static void GetStudentAndGroup()
                     break;
                 case (int)OperationType.StudentGetAll:
                     studentController.GetAll();
-                   goto Operation;
+                    break;
                 case (int)OperationType.StudentSorting:
                     studentController.Filter();
                     break;
                 case (int)OperationType.StudentSearch:
                     studentController.Search();
                     break;
-
+                default:
+                    ConsoleColor.Red.WriteConsole("Invalid operation. Please try again.");
+                    break;
             }
+        }
+        else
+        {
+            ConsoleColor.Red.WriteConsole("Invalid operation format. Please try again.");
         }
     }
 }
+
 static void GetMenues()
 {
     ConsoleColor.Cyan.WriteConsole("(1) - Register, (2) - Login");
