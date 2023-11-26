@@ -66,9 +66,8 @@ namespace Course_app.Controllers
                 ConsoleColor.Red.WriteConsole("Capacity format is wrong,please select again:");
                 goto Capacity;
             }
-
-
         }
+
         public void GetAll()
         {
             var result = _groupService.GetAll();

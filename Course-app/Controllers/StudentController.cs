@@ -30,14 +30,21 @@ namespace Course_app.Controllers
                 ConsoleColor.Red.WriteConsole("Dont be Empty");
                 goto Fullname;
             }
+
             if (!RegisterExcentions.CheckFullName(fullname))
             {
                 ConsoleColor.Red.WriteConsole("Fullname is Required");
                 goto Fullname;
             }
+   
 
         Age: ConsoleColor.White.WriteConsole("Add your age:");
             string ageStr = Console.ReadLine();
+            if (string.IsNullOrWhiteSpace(ageStr))
+            {
+                ConsoleColor.Red.WriteConsole("Don't be Empty,please enter your Age");
+                goto Age;
+            }
             int age;
             bool isCorrectAge = int.TryParse(ageStr, out age);
             if (!isCorrectAge)
@@ -46,11 +53,7 @@ namespace Course_app.Controllers
                 goto Age;
             }
 
-            if (string.IsNullOrWhiteSpace(ageStr))
-            {
-                ConsoleColor.Red.WriteConsole("Don't be Empty,please enter your Age");
-                goto Age;
-            }
+         
             if (age < 15 || age > 60)
             {
                 Console.WriteLine("Age incorrect");
@@ -137,6 +140,10 @@ namespace Course_app.Controllers
 
         Id: Console.WriteLine("Add id :");
             string idStr = Console.ReadLine();
+            if (string.IsNullOrWhiteSpace(idStr))
+            {
+                ConsoleColor.Red.WriteConsole("Don't Be Empty");
+            }
             int id;
             bool IsCorrectId = int.TryParse(idStr, out id);
             if (IsCorrectId)
@@ -183,6 +190,11 @@ namespace Course_app.Controllers
             Console.WriteLine("Add Student id:");
         Id:
             string idStr = Console.ReadLine();
+            if (string.IsNullOrWhiteSpace(idStr))
+            {
+                ConsoleColor.Red.WriteConsole("Dont Be Empty");
+                goto Id;
+            }
             int id;
             bool isCorrectId = int.TryParse(idStr, out id);
 
@@ -196,8 +208,9 @@ namespace Course_app.Controllers
                 }
                 else
                 {
-                    Console.WriteLine("Edit Student Name:");
+                     Console.WriteLine("Edit Student Name:");
                     string name = Console.ReadLine();
+                   
                     Console.WriteLine("Edit Address:");
                     string address = Console.ReadLine();
 

@@ -9,5 +9,6 @@ namespace Service.Helpers.Constants
     public class ExceptionsConstants
     {
         public const string NotFoundException = "Data Not Found";
+        public const string DontBeFount = "Don't be Found";
     }
 }
