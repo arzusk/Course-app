@@ -152,7 +152,7 @@ namespace Course_app.Controllers
 
                 if (student != null)
                 {
-                    _studentService.Create(student);
+                   
                     Console.WriteLine($"Student Name: {student.FullName} Student Age :{student.Age} Student Address:{student.Address} Student Phone :{student.Phone}");
                 }
                 else
@@ -172,17 +172,28 @@ namespace Course_app.Controllers
         {
             Console.WriteLine("Add Student id :");
         Id: string idStr = Console.ReadLine();
+            if (string.IsNullOrWhiteSpace(idStr))
+            {
+                ConsoleColor.Red.WriteConsole("Don't be Empty");
+                goto Id;
+            }
             int id;
             bool IsCorrectId = int.TryParse(idStr, out id);
             if (IsCorrectId)
             {
                 var student = _studentService.GetById(id);
+                if(student is null)
+                {
+                    ConsoleColor.Red.WriteConsole("Student Not Found");
+                    return;
+                }
                 _studentService.Delete(student);
                 Console.WriteLine("Student has been deleted");
             }
             else
             {
                 ConsoleColor.Red.WriteConsole("ID Format is wrong,please select again:");
+                goto Id;
             }
         }
         public void Edit()

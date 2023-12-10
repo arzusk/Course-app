@@ -4,6 +4,9 @@ using Domain.Models;
 using Repository.Enums;
 using Service.Helpers.Extensions;
 
+ConsoleColor.DarkYellow.WriteConsole("WELCOME APPLICATION");
+
+
 AccountController accountController = new();
 
 
